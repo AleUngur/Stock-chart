@@ -15,7 +15,19 @@
 
   <body>
     <div class="container">
-      <h2 class="mt-4 mb-4">Enter a chart name</h2>
+      <h2 class="mt-4 mb-4">Stock-chart</h2>
+      <div class="input-group mb-3">
+        <form id="search-stock">
+          <input type="text" name="symbol" id="search-bar" placeholder="Search by symbol">
+        <button class="btn btn-outline-secondary" type="submit" id="submitButton">Display chart</button>
+      </form>
+      
+      </div>
+      <div><h3 id = "stock-name"></h3>
+        <h3 id = "stock-price"></h3>
+        <h3  id = "stock-high"></h3>
+        <h3 id = "stock-currency"></h3>
+      </div>
       
       </div>
     </div>
