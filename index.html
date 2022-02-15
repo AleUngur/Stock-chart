@@ -11,27 +11,36 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   </head>
 
   <body>
     <div class="container">
       <h2 class="mt-4 mb-4">Stock-chart</h2>
       <div class="input-group mb-3">
-        <form id="search-stock">
-          <input type="text" name="symbol" id="search-bar" placeholder="Search by symbol">
-        <button class="btn btn-outline-secondary" type="submit" id="submitButton">Display chart</button>
-      </form>
-      
-      </div>
-      <div><h3 id = "stock-name"></h3>
-        <h3 id = "stock-price"></h3>
-        <h3  id = "stock-high"></h3>
-        <h3 id = "stock-currency"></h3>
-      </div>
-      
+        <input
+          type="text"
+          class="form-control"
+          id="symbol-input"
+          placeholder="Enter a stock's symbol"
+        />
+        <button
+          class="btn btn-outline-secondary"
+          type="submit"
+          id="submitButton"
+        >
+          Display Chart
+        </button>
       </div>
     </div>
-
+    <div id="container row">
+      <div id="chart" class="py-3 px-3"></div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

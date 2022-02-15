@@ -1,47 +1,83 @@
-const configuration = {
-  method: "GET",
-  headers: {
-    "x-rapidapi-host": "yh-finance.p.rapidapi.com",
-    "x-rapidapi-key": "64c824b8d9msh1c34bd003962c78p171bd7jsn16e14c535f1a",
+var key = "d87172a12149bbe6225de4fd765bf31f";
+document.getElementById("submitButton").addEventListener("click", displayChart);
+var chart = document.querySelector("#chart");
+
+var options = {
+  chart: {
+    type: "candlestick",
+    height: 600,
+  },
+  series: [
+    {
+      data: [],
+    },
+  ],
+  title: {
+    text: "",
+    align: "left",
+  },
+  xaxis: {
+    type: "datetime",
+  },
+  yaxis: {
+    tooltip: {
+      enabled: true,
+    },
   },
 };
-const url =
-  "https://yh-finance.p.rapidapi.com/stock/v3/get-chart?interval=1mo&symbol=AMRN&range=5y&region=US&includePrePost=false&useYfid=true&includeAdjustedClose=true&events=capitalGain%2Cdiv%2Csplit";
 
-const name = document.querySelector("#stock-name");
-const price = document.querySelector("#stock-price");
-const high = document.querySelector("#stock-high");
-const currency = document.querySelector("#stock-currency");
+function displayChart() {
+  var symbol = document.getElementById("symbol-input").value;
+  //getting data from API and creating the chart
+  get(symbol);
+}
 
-fetch(url, configuration)
-  .then(function (response) {
-    if (response.status !== 200) {
-      console.log(
-        "Looks like there was a problem. Status Code: " + response.status
-      );
-      return;
-    }
-
-    // Examine the text in the response
-    response.json().then(function (data) {
-      console.log(data);
-      displayData(data);
+function get(symbol) {
+  fetch(
+    `http://api.marketstack.com/v1/eod?access_key=` +
+      key +
+      `&symbols=` +
+      symbol +
+      `&limit=75`
+  )
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log(
+          "Looks like there was a problem. Status Code: " + response.status
+        );
+        return;
+      }
+      // Examine the text in the response
+      response.json().then(function (data) {
+        console.log(data);
+        formatData(data, symbol);
+        function createChart() {
+          chart.innerText = "";
+          chart = new ApexCharts(document.querySelector("#chart"), options);
+          chart.render();
+        }
+        createChart();
+      });
+    })
+    .catch(function (err) {
+      console.log("Fetch Error :-S", err);
     });
-  })
-  .catch(function (err) {
-    console.log("Fetch Error :-S", err);
-  });
+}
 
-//displaying some data from API
-function displayData(stockData) {
-  let metadata = stockData.chart.result[0].meta;
-  let indicators = stockData.chart.result[0].indicators;
-  name.innerText = "Stock name:" + metadata.symbol;
-  console.log("Stock name:" + metadata.symbol);
-  price.innerText = "Stock price:" + metadata.priceHint;
-  console.log("Stock price:" + metadata.priceHint);
-  high.innerText = "Stock high:" + indicators.quote[0].high[0];
-  console.log("Stock high:" + indicators.quote[0].high[0]);
-  currency.innerText = "Stock currecy:" + metadata.currency;
-  console.log("Stock currecy:" + metadata.currency);
+function formatData(stockData, symbol) {
+  options.title.text = symbol;
+  let solution = [];
+  var apiData = stockData.data;
+  for (var entry of apiData) {
+    let obj = {};
+    obj.x = new Date(entry.date); //the x axis will be containing the date
+    let price = [];
+    price.push(entry.open);
+    price.push(entry.high);
+    price.push(entry.low);
+    price.push(entry.close);
+    obj.y = price; //the y axis will be containing the prices
+    solution.push(obj);
+  }
+  options.series[0].data = solution.sort((a, b) => a.x - b.x); //put in series what we obtained
 }
